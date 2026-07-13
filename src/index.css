@@ -1,0 +1,352 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  background-color: #0B0F17;
+  color: #F8FAFC;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Daytime Mode / Light Mode Professional Overrides (Blue-White-Green)
+   ========================================================================== */
+
+.light-mode {
+  background-color: #F4F7FA !important;
+  color: #1E293B !important;
+}
+
+/* Override body and general classes when light-mode is active */
+.light-mode,
+.light-mode #main-scroll-container,
+.light-mode [class*="bg-[#0B0F17]"] {
+  background-color: #F4F7FA !important;
+}
+
+/* Header & Top Panels */
+.light-mode header,
+.light-mode [class*="bg-[#0A0D14]"] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Secondary Navigation & Tabs */
+.light-mode nav,
+.light-mode [class*="bg-[#101523]"] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* Sidebars / Control Panels */
+.light-mode aside,
+.light-mode [class*="bg-[#0D121F]"] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -1px rgba(15, 23, 42, 0.03) !important;
+}
+
+/* Card backgrounds & Containers mapping using substring matches - 100% robust */
+.light-mode [class*="bg-[#0A0F1E]"],
+.light-mode [class*="bg-[#0A0E1A]"],
+.light-mode [class*="bg-[#080C16]"],
+.light-mode [class*="bg-[#070A13]"],
+.light-mode [class*="bg-[#0E1424]"],
+.light-mode [class*="bg-[#070A14]"],
+.light-mode [class*="bg-[#090D16]"],
+.light-mode [class*="bg-[#090d16]"],
+.light-mode [class*="bg-[#090E1A]"],
+.light-mode [class*="bg-[#080B14]"],
+.light-mode [class*="bg-[#111625]"],
+.light-mode [class*="bg-[#0B0F17]"],
+.light-mode [class*="bg-[#0B0F19]"],
+.light-mode [class*="bg-[#0D121F]"],
+.light-mode [class*="bg-[#131825]"],
+.light-mode [class*="bg-[#161D2E]"],
+.light-mode [class*="bg-[#121625]"],
+.light-mode [class*="bg-[#0A101E]"],
+.light-mode [class*="bg-[#050811]"],
+.light-mode [class*="bg-[#060912]"],
+.light-mode [class*="bg-[#0E1B35]"],
+.light-mode [class*="bg-[#161F38]"],
+.light-mode [class*="bg-[#0C111F]"],
+.light-mode [class*="bg-[#090D18]"],
+.light-mode [class*="bg-[#0D121F]"],
+.light-mode [class*="bg-slate-950"],
+.light-mode [class*="bg-slate-900"],
+.light-mode [class*="bg-[#090D15]"],
+.light-mode [class*="bg-[#101524]"],
+.light-mode [class*="bg-[#150D0E]"],
+.light-mode [class*="bg-[#14100C]"],
+.light-mode [class*="bg-[#0B1416]"] {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -1px rgba(15, 23, 42, 0.01) !important;
+}
+
+/* Secondary Token / Inner Card backgrounds (Soft blue-gray light backgrounds) */
+.light-mode [class*="bg-[#121724]"],
+.light-mode [class*="bg-[#111625]"]/60,
+.light-mode [class*="bg-[#111625]/60"],
+.light-mode [class*="bg-[#090E1A]"]/60,
+.light-mode [class*="bg-[#090E1A]/60"],
+.light-mode [class*="bg-[#121625]"]/80,
+.light-mode [class*="bg-[#121625]/80"],
+.light-mode [class*="bg-[#111625]"]/90,
+.light-mode [class*="bg-[#111625]/90"] {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #334155 !important;
+}
+
+/* Beautiful custom active sub-tabs mapping (Corporate Royal Blue Accent) */
+.light-mode .bg-white.text-black,
+.light-mode [class*="bg-white text-black"] {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+  border-color: #2563EB !important;
+}
+
+/* Beautiful custom blue-white-green gradient for AI 本期结论 */
+.light-mode [class*="bg-gradient-to-r"] {
+  background-image: linear-gradient(to right, #F0FDF4 10%, #FFFFFF 50%, #EFF6FF 100%) !important;
+  border-color: #BBF7D0 !important;
+  color: #1E293B !important;
+}
+
+/* Border Overrides to crisp light borders */
+.light-mode [class*="border-white/"],
+.light-mode [class*="border-[#ffffff0a]"],
+.light-mode .border-white\/5,
+.light-mode .border-white\/10,
+.light-mode .border-white\/25,
+.light-mode .border-\[\#ffffff0a\] {
+  border-color: #E2E8F0 !important;
+}
+
+/* Inputs, Textareas and Dropdown Options */
+.light-mode select,
+.light-mode input,
+.light-mode textarea {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  border-color: #CBD5E1 !important;
+}
+
+.light-mode option {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+}
+
+/* Text elements color overrides using substring and general matches */
+.light-mode h1,
+.light-mode h2,
+.light-mode h3,
+.light-mode h4,
+.light-mode h5,
+.light-mode h6,
+.light-mode .text-white,
+.light-mode [class*="text-white"],
+.light-mode .text-slate-100,
+.light-mode [class*="text-slate-100"],
+.light-mode .text-slate-200,
+.light-mode [class*="text-slate-200"],
+.light-mode .text-slate-300,
+.light-mode [class*="text-slate-300"] {
+  color: #1E293B !important;
+}
+
+.light-mode .text-slate-400,
+.light-mode [class*="text-slate-400"],
+.light-mode .text-slate-350,
+.light-mode [class*="text-slate-350"] {
+  color: #475569 !important;
+}
+
+.light-mode .text-slate-500,
+.light-mode [class*="text-slate-500"],
+.light-mode .text-slate-450,
+.light-mode [class*="text-slate-450"] {
+  color: #64748B !important;
+}
+
+/* Ensure nice feedback on buttons & elements on hover */
+.light-mode [class*="hover:bg-white/5"]:hover,
+.light-mode [class*="hover:bg-white/10"]:hover {
+  background-color: rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Badges / Micro status states mapped elegantly */
+.light-mode .bg-emerald-500\/10,
+.light-mode .bg-emerald-500\/20,
+.light-mode [class*="bg-emerald-500/10"],
+.light-mode [class*="bg-emerald-500/20"] {
+  background-color: #EBFDF5 !important;
+  border-color: #A7F3D0 !important;
+  color: #15803D !important;
+}
+
+.light-mode .bg-blue-500\/10,
+.light-mode .bg-blue-500\/20,
+.light-mode [class*="bg-blue-500/10"],
+.light-mode [class*="bg-blue-500/20"] {
+  background-color: #EFF6FF !important;
+  border-color: #BFDBFE !important;
+  color: #1D4ED8 !important;
+}
+
+.light-mode .bg-rose-500\/10,
+.light-mode .bg-rose-500\/20,
+.light-mode [class*="bg-rose-500/10"],
+.light-mode [class*="bg-rose-500/20"] {
+  background-color: #FFF1F2 !important;
+  border-color: #FECDD3 !important;
+  color: #E11D48 !important;
+}
+
+.light-mode .bg-amber-500\/10,
+.light-mode [class*="bg-amber-500/10"] {
+  background-color: #FFFBEB !important;
+  border-color: #FDE68A !important;
+  color: #B45309 !important;
+}
+
+/* Color codes mapping in light mode (Highly readable & professional) */
+.light-mode .text-emerald-400, .light-mode [class*="text-emerald-400"] { color: #16A34A !important; }
+.light-mode .text-blue-400, .light-mode [class*="text-blue-400"] { color: #2563EB !important; }
+.light-mode .text-rose-400, .light-mode [class*="text-rose-400"] { color: #DC2626 !important; }
+.light-mode .text-amber-400, .light-mode [class*="text-amber-400"] { color: #D97706 !important; }
+
+/* Keep solid buttons readable with white text */
+.light-mode button.bg-blue-600,
+.light-mode button.bg-blue-600 *,
+.light-mode button.bg-emerald-600,
+.light-mode button.bg-emerald-600 *,
+.light-mode button.bg-emerald-500,
+.light-mode button.bg-emerald-500 *,
+.light-mode button[class*="bg-gradient-to-r"],
+.light-mode button[class*="bg-gradient-to-r"] * {
+  color: #FFFFFF !important;
+}
+
+/* Soft and professional scrollbar in light mode */
+.light-mode .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(15, 23, 42, 0.12) !important;
+}
+.light-mode .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(15, 23, 42, 0.24) !important;
+}
+
+/* Elegant Light Mode Backdrop with blur */
+.light-mode .fixed.inset-0,
+.light-mode [class*="fixed inset-0"] {
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+/* ==========================================================================
+   Recharts Chart Light Mode Overrides (Blue-White-Green Theme)
+   ========================================================================== */
+.light-mode .recharts-cartesian-grid line,
+.light-mode .recharts-cartesian-grid-horizontal line,
+.light-mode .recharts-cartesian-grid-vertical line {
+  stroke: #E2E8F0 !important;
+  stroke-opacity: 1 !important;
+}
+
+.light-mode .recharts-cartesian-axis-line,
+.light-mode .recharts-cartesian-axis-tick line {
+  stroke: #CBD5E1 !important;
+}
+
+.light-mode .recharts-cartesian-axis-tick text,
+.light-mode .recharts-text {
+  fill: #475569 !important;
+  color: #475569 !important;
+}
+
+.light-mode .recharts-default-tooltip {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+  color: #0F172A !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.light-mode .recharts-default-tooltip *,
+.light-mode .recharts-tooltip-label,
+.light-mode .recharts-tooltip-item,
+.light-mode .recharts-tooltip-item-name,
+.light-mode .recharts-tooltip-item-value {
+  color: #0F172A !important;
+}
+
+/* Radar chart polar grids */
+.light-mode .recharts-polar-grid-angle line,
+.light-mode .recharts-polar-grid-concentric path {
+  stroke: #E2E8F0 !important;
+}
+
+.light-mode .recharts-polar-angle-axis-tick text {
+  fill: #475569 !important;
+  color: #475569 !important;
+}
+
+/* ==========================================================================
+   GESI Seven Sub-index Capability Pool Light Mode Specific Overrides
+   ========================================================================== */
+.light-mode [class*="bg-[#121624]"] {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+  box-shadow: inset 0 1px 2px 0 rgba(15, 23, 42, 0.02) !important;
+}
+
+.light-mode #gesi-interactive-section > div:first-child {
+  background-color: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+}
+
+.light-mode #gesi-interactive-section button:not([class*="bg-blue"]) {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+}
+
+.light-mode #gesi-interactive-section button:not([class*="bg-blue"]):hover {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Progress tracks visibility in GESI sub-indices light mode */
+.light-mode .h-2.bg-slate-900,
+.light-mode .h-2\.5.bg-slate-900,
+.light-mode .h-6.bg-slate-900,
+.light-mode [class*="bg-slate-900"].h-2,
+.light-mode [class*="bg-slate-900"].h-2\.5,
+.light-mode [class*="bg-slate-900"].h-6 {
+  background-color: #E2E8F0 !important;
+  border-color: #CBD5E1 !important;
+}
+
+

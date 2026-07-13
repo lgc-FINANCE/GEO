@@ -1,0 +1,8 @@
+{
+  "name": "Remix: GEO项目-数据反馈",
+  "description": "这个是GEO项目，你是一个资深的产品UI设计，我是产品经理，我会提供给你我的要求，需要帮我修改UI页面",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
