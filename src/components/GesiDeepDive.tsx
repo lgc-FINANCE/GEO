@@ -1,6 +1,8 @@
 // src/components/GesiDeepDive.tsx
 import { useState, useEffect, useMemo, Fragment } from 'react';
 import { Company } from '../data';
+import { EvidenceScreenshots } from './EvidenceScreenshots';
+import { GaiInferenceHubModal } from './GaiInferenceHub';
 import { 
   Eye, Zap, Star, Shield, HelpCircle, AlertTriangle, 
   Layers, MessageSquare, ListCollapse, FileText, CheckCircle2,
@@ -15,9 +17,10 @@ interface GesiDeepDiveProps {
   company: Company;
   onNavigate?: (subview: string) => void;
   isLightMode?: boolean;
+  isStatic?: boolean;
 }
 
-export function GesiDeepDive({ company, onNavigate, isLightMode }: GesiDeepDiveProps) {
+export function GesiDeepDive({ company, onNavigate, isLightMode, isStatic = false }: GesiDeepDiveProps) {
   // Navigation tabs of GESI
   const [selectedGesiTab, setSelectedGesiTab] = useState<'gvi' | 'gri' | 'gii' | 'gci' | 'gai' | 'gdi' | 'gss'>('gvi');
 
@@ -2997,117 +3000,14 @@ export function GesiDeepDive({ company, onNavigate, isLightMode }: GesiDeepDiveP
         </div>
       </div>
 
-      {/* 真实大模型黑盒回答实机原截图弹窗 Modal */}
+      {/* 真实大模型黑盒回答实机原截图弹窗 Modal - Upgraded to Dynamic GaiInferenceHubModal */}
       {activeScreenshot && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn select-none">
-          <div 
-            className={`w-full max-w-2xl rounded-2xl border overflow-hidden shadow-2xl flex flex-col ${
-              activeLight ? 'bg-white border-slate-200' : 'bg-slate-900 border-white/10'
-            }`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Window Header / Mac style */}
-            <div className={`px-4 py-3 border-b flex items-center justify-between ${
-              activeLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/50 border-white/5'
-            }`}>
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500 block"></span>
-                <span className="w-3 h-3 rounded-full bg-amber-500 block"></span>
-                <span className="w-3 h-3 rounded-full bg-emerald-500 block"></span>
-                <span className="text-[11px] font-mono font-bold text-slate-500 ml-2">LLM 实机动态黑盒对账沙箱存证</span>
-              </div>
-              <button 
-                onClick={() => setActiveScreenshot(null)}
-                className="text-slate-400 hover:text-slate-200 transition-colors text-xs font-bold cursor-pointer"
-              >
-                ✕ 关闭
-              </button>
-            </div>
-
-            {/* Virtual Browser Address Bar */}
-            <div className={`px-4 py-2 border-b flex items-center gap-2 ${
-              activeLight ? 'bg-white border-slate-100' : 'bg-slate-900/40 border-white/5'
-            }`}>
-              <div className="flex items-center gap-1.5 text-slate-400">
-                <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                <span className="text-[10px] font-mono">https://{
-                  activeScreenshot.modelName.includes('Kimi') ? 'kimi.moonshot.cn' :
-                  activeScreenshot.modelName.includes('DeepSeek') ? 'chat.deepseek.com' :
-                  activeScreenshot.modelName.includes('豆包') ? 'www.doubao.com' :
-                  activeScreenshot.modelName.includes('通义') ? 'tongyi.aliyun.com' :
-                  activeScreenshot.modelName.includes('元宝') ? 'yuanbao.tencent.com' :
-                  'yiyan.baidu.com'
-                }/chat/evidence_session_9108</span>
-              </div>
-            </div>
-
-            {/* Simulated Live Chat Content Area */}
-            <div className={`p-6 flex-1 overflow-y-auto max-h-[380px] space-y-5 custom-scrollbar font-sans ${
-              activeLight ? 'bg-slate-50' : 'bg-slate-950/80'
-            }`}>
-              
-              {/* User Question Bubble */}
-              <div className="flex items-start gap-3 justify-end">
-                <div className="space-y-1 text-right">
-                  <span className="text-[10px] text-slate-400 block font-mono">SYS_USER (匿名评测源)</span>
-                  <div className="inline-block p-3 rounded-2xl bg-blue-600 text-white text-xs max-w-md text-left font-sans shadow-md">
-                    {activeScreenshot.question}
-                  </div>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-blue-700 flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm shrink-0">
-                  U
-                </div>
-              </div>
-
-              {/* LLM Answer Bubble */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-xs text-white uppercase shadow-sm shrink-0 font-mono">
-                  {activeScreenshot.modelName[0]}
-                </div>
-                <div className="space-y-1 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className={`text-[10px] font-bold block ${activeLight ? 'text-slate-800' : 'text-slate-200'}`}>{activeScreenshot.modelName}</span>
-                    <span className="text-[9px] bg-emerald-500/10 text-emerald-500 px-1 py-0.2 rounded font-mono">认证心智对仗库</span>
-                  </div>
-                  <div className={`p-4 rounded-2xl text-xs leading-relaxed max-w-lg shadow-sm border font-sans ${
-                    activeLight ? 'bg-white border-slate-200 text-slate-800' : 'bg-slate-900 border-white/5 text-slate-300'
-                  }`}>
-                    {/* Highlight our brand and competitive labels dynamically to make it look super realistic */}
-                    {activeScreenshot.answer.split(/(荣威D7|D7 DMH|秦L|秦L DM-i|比亚迪)/g).map((part, i) => {
-                      if (part === '荣威D7' || part === 'D7 DMH') {
-                        return <mark key={i} className="bg-blue-500/20 text-blue-600 dark:text-blue-400 px-1 py-0.5 rounded font-bold border-b border-blue-400/30">{part}</mark>;
-                      } else if (part === '秦L' || part === '秦L DM-i' || part === '比亚迪') {
-                        return <mark key={i} className="bg-rose-500/20 text-rose-600 dark:text-rose-400 px-1 py-0.5 rounded font-bold border-b border-rose-400/30">{part}</mark>;
-                      }
-                      return <span key={i}>{part}</span>;
-                    })}
-                  </div>
-                </div>
-              </div>
-
-              {/* Watermark Overlay and Security Verification */}
-              <div className="pt-4 border-t border-dashed border-slate-700/20 flex flex-col md:flex-row items-center justify-between text-[9px] text-slate-500 gap-2 font-mono">
-                <div>🛡️ 数字存证校验哈希: <span className="text-slate-400 font-bold">SHA256-4ED8B9A0C3231F...</span></div>
-                <div>时间对准戳: {activeScreenshot.timestamp} UTC+8</div>
-              </div>
-            </div>
-
-            {/* Bottom Footer Action buttons */}
-            <div className={`px-4 py-3 border-t flex justify-between items-center ${
-              activeLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-950/40 border-white/5'
-            }`}>
-              <span className="text-[10px] text-slate-500 flex items-center gap-1 font-mono">
-                ✨ 实机原图真实度 100% 审计链覆盖
-              </span>
-              <button 
-                onClick={() => setActiveScreenshot(null)}
-                className="py-1.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs transition-colors cursor-pointer"
-              >
-                关闭并返回诊断中心
-              </button>
-            </div>
-          </div>
-        </div>
+        <GaiInferenceHubModal 
+          company={company}
+          metricCode={selectedGesiTab.toUpperCase()}
+          onClose={() => setActiveScreenshot(null)}
+          isLightMode={activeLight}
+        />
       )}
 
       {/* activeTaskPrompt Modal (AIGC-GEO提示词编译器) */}
@@ -3292,6 +3192,9 @@ export function GesiDeepDive({ company, onNavigate, isLightMode }: GesiDeepDiveP
                   <span className="block text-slate-400 text-[8px]">主要语料抓取来源</span>
                   <span className={`font-bold ${theme.textPrimary} truncate block`} title={activeEvidenceChain.source}>{activeEvidenceChain.source}</span>
                 </div>
+              </div>
+              <div className="mt-4 mb-4">
+                <EvidenceScreenshots company={company} isLightMode={activeLight} isStatic={isStatic} />
               </div>
 
               <div className={`p-3 rounded-xl border text-[10px] leading-relaxed text-slate-500 flex gap-2 ${

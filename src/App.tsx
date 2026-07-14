@@ -18,7 +18,7 @@ import { DeliverablesView } from './components/DeliverablesView';
 
 export default function App() {
   // Theme state: light mode (daytime mode) or dark mode
-  const [isLightMode, setIsLightMode] = useState<boolean>(true);
+  const [isLightMode, setIsLightMode] = useState<boolean>(false);
 
   // Top navigation page state: 'project_center' | 'data_overview' | 'content_placement' | 'deliverables'
   const [activePage, setActivePage] = useState<string>('data_overview');
@@ -64,7 +64,7 @@ export default function App() {
   };
 
   // Callback to automatically add a placement task from the AI diagnostic center
-  const handleAddPlacementTask = (taskName: string, query: string, metric: string, type: any) => {
+  const handleAddPlacementTask = (taskName: string, query: string, metric: string, type: any, optPrompt?: string) => {
     const newTask = {
       id: `task-ai-${Date.now()}`,
       name: taskName,
@@ -73,7 +73,8 @@ export default function App() {
       contentType: type,
       priority: 'P0' as const,
       status: '待生成' as const,
-      owner: '系统自动派发'
+      owner: '系统自动派发',
+      optPrompt: optPrompt || ''
     };
 
     const updated = {
@@ -249,6 +250,7 @@ export default function App() {
           {activePage === 'deliverables' && (
             <DeliverablesView 
               company={selectedCompany} 
+              isLightMode={isLightMode}
             />
           )}
 

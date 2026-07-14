@@ -18,19 +18,22 @@ import { GliVliTab } from './GliVliTab';
 import { GliRliTab } from './GliRliTab';
 import { GliIliTab } from './GliIliTab';
 import { GliCliTab } from './GliCliTab';
+import { EvidenceScreenshots } from './EvidenceScreenshots';
 import { GliAliTab } from './GliAliTab';
 import { GliDliTab } from './GliDliTab';
 import { GliRciTab } from './GliRciTab';
 import { overviewTrendData } from './GliDeepDiveData';
+import { GaiInferenceHubModal } from './GaiInferenceHub';
 
 interface GliDeepDiveProps {
   company: Company;
   isLightMode?: boolean;
   onNavigate?: (subview: any) => void;
   viewMode?: string;
+  isStatic?: boolean;
 }
 
-export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) {
+export function GliDeepDive({ company, isLightMode = false, isStatic = false }: GliDeepDiveProps) {
   // 7 sub-indices active states
   const [gliTab, setGliTab] = useState<'vli' | 'rli' | 'ili' | 'cli' | 'ali' | 'dli' | 'rci'>('vli');
   const [localToast, setLocalToast] = useState<string | null>(null);
@@ -72,6 +75,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
     rci: false
   });
   const [selectedDetailTab, setSelectedDetailTab] = useState<'vli' | 'rli' | 'ili' | 'cli' | 'ali' | 'dli' | 'rci'>('vli');
+  const [activeHubMetric, setActiveHubMetric] = useState<string | null>(null);
   
   const [isWeightPanelOpen, setIsWeightPanelOpen] = useState(false);
 
@@ -170,7 +174,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
     } catch (e) {
       console.error(e);
     }
-    triggerLocalToast('已成功重置各项提升指数权重至行业基准比率');
+    triggerLocalToast('已成功重置各项提升指数权重');
   };
 
   const handleWeightChange = (changedKey: keyof typeof weights, targetVal: number) => {
@@ -296,12 +300,12 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                 GEO ELEVATION
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] text-slate-500 font-bold font-mono">本统计周期：第5周 (采样稳定对账)</span>
+              <span className="text-[10px] text-slate-500 font-bold font-mono">本统计周期：第5周 </span>
             </div>
             
             <h2 className={`text-lg font-black tracking-tight ${theme.textPrimary} flex items-center gap-2`}>
               <Layers className="w-5 h-5 text-indigo-500" />
-              GLI 优化提升指数看板 (GEO Elevation Index Dashboard)
+              GLI 优化提升指数 
             </h2>
             <p className="text-[11px] text-slate-500 font-mono">
               量化考核我方针对大模型(LLM)内容注入、白皮书投送及认知纠偏后的净收益提升效果。
@@ -347,17 +351,17 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
               <div>
                 <h4 className="text-xs font-bold text-indigo-400 flex items-center gap-1.5 uppercase tracking-wider font-sans">
                   <Sliders className="w-4 h-4" />
-                  GLI 指数权重分配与智能平衡中心
+                  GLI 指数权重分配
                 </h4>
                 <p className={`text-[11px] ${isLightMode ? 'text-slate-600' : 'text-slate-400'} mt-1 font-sans`}>
-                  您可以自定义七大维度的计算权重比例。系统将自动保持<span className="text-emerald-500 font-bold">总和为 100%</span>，您也可以<span className="text-indigo-400 font-bold">锁定</span>特定权重以防在调整其他维度时发生联动变化。
+                  自定义七大维度的计算权重比例。系统将自动保持<span className="text-emerald-500 font-bold">总和为 100%</span>。
                 </p>
               </div>
               
               <div className="flex flex-wrap items-center gap-2 font-mono">
                 <span className={`text-[10px] ${isLightMode ? 'text-slate-600' : 'text-slate-400'} font-mono bg-slate-500/5 border ${isLightMode ? 'border-slate-200' : 'border-white/5'} px-2.5 py-1 rounded-lg flex items-center gap-1`}>
                   权重总和: <span className={tempTotalWeight === 100 ? "text-emerald-500 font-black" : "text-amber-500 font-black"}>{tempTotalWeight}%</span>
-                  {tempTotalWeight !== 100 && <span className="text-amber-500 text-[9px] font-bold">(需调整至100%)</span>}
+                  {tempTotalWeight !== 100 && <span className="text-amber-500 text-[9px] font-bold"></span>}
                 </span>
                 
                 <button 
@@ -368,7 +372,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                   }}
                   className={`px-2.5 py-1 text-[10px] ${isLightMode ? 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700' : 'bg-slate-900/40 hover:bg-white/[0.04] border-white/5 text-slate-400'} border rounded-lg transition-all cursor-pointer font-sans font-bold`}
                 >
-                  默认权重 (20:20:15...)
+                  默认权重
                 </button>
                 
                 <button 
@@ -379,7 +383,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                   }}
                   className="px-2.5 py-1 text-[10px] bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/10 rounded-lg transition-all cursor-pointer font-sans font-bold"
                 >
-                  曝光优先 (40:20...)
+                  曝光优先
                 </button>
 
                 <button 
@@ -390,7 +394,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                   }}
                   className="px-2.5 py-1 text-[10px] bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 border border-emerald-500/10 rounded-lg transition-all cursor-pointer font-sans font-bold"
                 >
-                  推荐转化优先 (10:40...)
+                  推荐转化优先
                 </button>
 
                 <button 
@@ -401,7 +405,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                   }}
                   className="px-2.5 py-1 text-[10px] bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/10 rounded-lg transition-all cursor-pointer font-sans font-bold"
                 >
-                  竞争防御优先 (15:15...)
+                  竞争防御优先 
                 </button>
               </div>
             </div>
@@ -436,7 +440,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                       <button
                         onClick={() => setSelectedDetailTab(idx.id as keyof typeof weights)}
                         className={`text-[11px] font-extrabold text-left hover:text-indigo-400 transition-colors cursor-pointer truncate flex-1 ${theme.textPrimary}`}
-                        title="点击查看此指数详细定义与指标详情"
+                        title="点击查看此指数详情"
                       >
                         {idx.name}
                       </button>
@@ -513,7 +517,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                               ? 'bg-indigo-500/25 text-indigo-400 hover:bg-indigo-500/40' 
                               : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
                           }`}
-                          title={isLocked ? "解锁权重 (解除不可调节限制)" : "锁定权重 (不参与分配和智能联动)"}
+                          title={isLocked ? "解锁权重" : "锁定权重 "}
                         >
                           {isLocked ? (
                             <Lock className="w-3.5 h-3.5 text-indigo-400" />
@@ -537,7 +541,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
               {/* Quick selectors for details card */}
               <div className="flex md:flex-col flex-wrap gap-1 md:w-44 shrink-0 border-b md:border-b-0 md:border-r border-slate-700/20 pb-3 md:pb-0 md:pr-3">
                 <span className="text-[10px] font-black uppercase tracking-wider mb-1.5 block w-full text-indigo-400 font-sans">
-                  ℹ️ 指数详情说明
+                   指数详情说明
                 </span>
                 {[
                   { id: 'vli', name: 'VLI 可见度提升' },
@@ -579,17 +583,17 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-[10.5px]">
                   <div className={`p-2.5 rounded-lg border ${isLightMode ? 'border-slate-200 bg-slate-50' : 'border-white/5 bg-white/[0.02]'}`}>
-                    <span className="text-[10px] font-black text-amber-500 block mb-1">📊 计算公式：</span>
+                    <span className="text-[10px] font-black text-amber-500 block mb-1">计算公式：</span>
                     <span className={theme.textSecondary}>{indexDetailsList[selectedDetailTab].calculation}</span>
                   </div>
                   
                   <div className={`p-2.5 rounded-lg border ${isLightMode ? 'border-slate-200 bg-slate-50' : 'border-white/5 bg-white/[0.02]'}`}>
-                    <span className="text-[10px] font-black text-emerald-500 block mb-1">🚀 优化手段：</span>
+                    <span className="text-[10px] font-black text-emerald-500 block mb-1">优化手段：</span>
                     <span className={theme.textSecondary}>{indexDetailsList[selectedDetailTab].optimization}</span>
                   </div>
 
                   <div className={`p-2.5 rounded-lg border ${isLightMode ? 'border-slate-200 bg-slate-50' : 'border-white/5 bg-white/[0.02]'}`}>
-                    <span className="text-[10px] font-black text-purple-500 block mb-1">🎯 战略价值：</span>
+                    <span className="text-[10px] font-black text-purple-500 block mb-1">战略价值：</span>
                     <span className={theme.textSecondary}>{indexDetailsList[selectedDetailTab].value}</span>
                   </div>
                 </div>
@@ -599,14 +603,14 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
             {/* Bottom Action Footer with Save Button */}
             <div className={`flex flex-wrap items-center justify-between gap-4 border-t ${isLightMode ? 'border-slate-200' : 'border-white/5'} pt-3.5`}>
               <div className="text-[10.5px] text-slate-500 font-mono leading-relaxed max-w-xl">
-                <span>💡 提示：在拉动单项指标时，其它未锁定的指标会自动反向平衡，使权重总和始终保持 100%。点击下方“保存生效”可持久化更新大盘。</span>
+                <span></span>
               </div>
               
               <div className="flex items-center gap-2">
                 {/* Draft Score Preview */}
                 <div className="text-[11.5px] font-mono mr-2 flex flex-col items-end leading-tight">
                   <span className={isLightMode ? 'text-slate-600 font-bold' : 'text-slate-400 font-bold'}>
-                    实时权重拟合效果:
+                    实时权重:
                   </span>
                   <span className="text-[10.5px] text-slate-500 mt-0.5">
                     拟合提升 GESI: <strong className="text-emerald-400 font-mono">+{tempGesiDelta.toFixed(1)} pts</strong>
@@ -623,7 +627,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                       console.error(e);
                     }
                     setIsWeightPanelOpen(false);
-                    triggerLocalToast("💾 GLI 提升指数自定义权重已锁定并持久化保存成功！");
+                    triggerLocalToast("💾 GLI 提升指数自定义权重已锁定成功！");
                   }}
                   className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer ${
                     tempTotalWeight === 100
@@ -652,7 +656,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
               <span className="text-[10px] text-slate-400 font-sans">pts (GESI 提升)</span>
             </div>
             <div className="text-[10px] text-slate-500 mt-2">
-              本周期全网内容和白皮书部署后，在大模型召回中所产生的<b>净生态增长值</b>。
+              本周期优化内容部署后，在大模型召回中所产生的<b>增长值</b>。
             </div>
           </div>
 
@@ -697,9 +701,9 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
         <div className="flex items-center gap-2 mb-4">
           <Activity className="w-4.5 h-4.5 text-emerald-500" />
           <h3 className="text-xs font-black uppercase tracking-wider text-slate-300" style={{ color: isLightMode ? '#1e293b' : '#ffffff' }}>
-            ⚖️ 优化前后对比卡 (三段式宏观健康对账)
+            ⚖️ 优化前后对比卡
           </h3>
-          <span className="text-[10px] text-slate-500">清楚讲明从 “原始状态” (Baseline) ➡️ “当前状态” (Current) 的量化变化</span>
+          <span className="text-[10px] text-slate-500"></span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -789,7 +793,6 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
           </div>
 
           <div className="text-[10.5px] text-slate-500 leading-relaxed bg-slate-950/20 p-2.5 rounded-lg border border-white/5 font-mono">
-            📌 <b>诊断目的：</b> 判别优化效果是<b>持续良性攀升</b>还是瞬时偶然的算法波动，五周的渐进曲线证实了底层重构模型的安全稳定性。
           </div>
         </div>
 
@@ -860,7 +863,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
             <div className="flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-indigo-400" />
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-300" style={{ color: isLightMode ? '#1e293b' : '#ffffff' }}>
-                🤖 AI 专家诊断与解读
+                 AI 专家诊断与解读
               </h3>
             </div>
             <p className="text-[10px] text-slate-500 font-mono">
@@ -872,7 +875,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
             <div className="flex items-start gap-2 text-slate-300">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
               <p>
-                <b>核心心智被高密采纳：</b> 吉利星瑞在主流大模型(Kimi、豆包、通义千问)中的『2.0T CMA动力架构』和『2800mm中级车轴距』等核心卖点提及率首次突破 <b>90%</b>。
+                <b>核心心智被高密采纳：</b> 品牌在主流大模型(Kimi、豆包、通义千问)中的『2.0T CMA动力架构』和『2800mm中级车轴距』等核心卖点提及率首次突破 <b>90%</b>。
               </p>
             </div>
             
@@ -907,11 +910,10 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
             <div className="flex items-center gap-1.5">
               <Calendar className="w-4 h-4 text-emerald-500" />
               <h3 className="text-xs font-black uppercase tracking-wider text-slate-300" style={{ color: isLightMode ? '#1e293b' : '#ffffff' }}>
-                🕒 投放复盘时间线 (GEO 传导全生命周期)
+                🕒 投放复盘
               </h3>
             </div>
             <p className="text-[10px] text-slate-500">
-              展示从 “内容投放分发” ➡️ “爬虫收录” ➡️ “模型语义重组” ➡️ “指数爆发” 的严密关联
             </p>
           </div>
 
@@ -1015,10 +1017,10 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
           <div className="flex items-center gap-2">
             <Scale className="w-4.5 h-4.5 text-indigo-400" />
             <h3 className="text-xs font-black uppercase tracking-wider text-slate-300" style={{ color: isLightMode ? '#1e293b' : '#ffffff' }}>
-              📊 提升与下降归因分析 (正负因素对账双栏)
+              📊 提升与下降归因分析 
             </h3>
           </div>
-          <span className="text-[10px] text-slate-500">归纳本周期大模型相关评估特征的核心加分点与流失缺陷</span>
+          <span className="text-[10px] text-slate-500">归纳本周期大模型相关评估特征的核心加分点与存在问题</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1127,14 +1129,14 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                 className={`p-1.5 rounded-lg border cursor-pointer hover:bg-indigo-500/10 transition-colors ${
                   isLightMode ? 'border-slate-200 text-slate-500 hover:text-slate-800' : 'border-white/5 text-slate-400 hover:text-white'
                 }`}
-                title="收起导航栏（从右往左）"
+                title="收起导航栏"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
               </button>
             </div>
             
             <p className="text-[10px] text-slate-500 font-sans -mt-2 text-left">
-              点击下方列表，可对齐切换诊断微观明细及引用证据大底表。
+              点击下方列表，可对齐切换子指数详情内容。
             </p>
 
             {/* Vertical Navigation Tabs */}
@@ -1153,7 +1155,7 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
                     id={`tab-gli-${subTab.key}`}
                     onClick={() => {
                       setGliTab(subTab.key);
-                      triggerLocalToast(`已切换至微观诊断：${subTab.label}`);
+                      triggerLocalToast(`已切换至子指数详情页面：${subTab.label}`);
                     }}
                     className={`p-2.5 rounded-xl border text-left flex items-center justify-between transition-all cursor-pointer group ${
                       isActive
@@ -1262,6 +1264,23 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
 
         {/* Right Content Panel: Selected Sub-Index Details */}
         <div className={isSidebarCollapsed ? "lg:col-span-11 flex flex-col justify-start" : "lg:col-span-9 flex flex-col justify-start"}>
+          {/* Click to Drilldown Banner */}
+          <div 
+            onClick={() => setActiveHubMetric(gliTab === 'dli' ? 'DLI' : gliTab.toUpperCase())}
+            className="mb-4 bg-indigo-500/5 hover:bg-indigo-500/10 border border-indigo-500/15 p-3 rounded-xl flex items-center justify-between text-xs text-indigo-400 hover:text-indigo-300 transition-all cursor-pointer shadow-sm group select-none"
+          >
+            <div className="flex items-center gap-2">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span className="font-bold">【{gliTab === 'dli' ? 'DLI' : gliTab.toUpperCase()}】维度大模型原生客户端交互存证已就绪</span>
+            </div>
+            <span className="text-[10px] bg-indigo-500/10 hover:bg-indigo-500/20 px-2.5 py-1 rounded-lg font-bold flex items-center gap-1 shrink-0">
+              ⚡ 穿透底层推理证据与深度审计分析 (Drilldown) →
+            </span>
+          </div>
+
           <div className="transition-all duration-300 h-full">
             {gliTab === 'vli' && (
               <GliVliTab company={company} isLightMode={isLightMode} theme={theme} />
@@ -1286,12 +1305,27 @@ export function GliDeepDive({ company, isLightMode = false }: GliDeepDiveProps) 
             )}
           </div>
         </div>
+      {!isStatic && (
+        <div className="mt-8 mb-4 lg:col-span-12 col-span-1">
+          <EvidenceScreenshots company={company} isLightMode={isLightMode} />
+        </div>
+      )}
       </div>
+
+      {/* Dynamic Hub Modal Injection */}
+      {activeHubMetric && (
+        <GaiInferenceHubModal 
+          company={company}
+          metricCode={activeHubMetric}
+          onClose={() => setActiveHubMetric(null)}
+          isLightMode={isLightMode}
+        />
+      )}
 
       {/* Auxiliary Global Defense Pipeline footer */}
       <div className={`p-4 rounded-xl border text-left space-y-2.5 ${theme.cardBg}`}>
         <h4 className="text-xs font-black uppercase tracking-wider text-slate-300 flex items-center gap-1.5" style={{ color: isLightMode ? '#1e293b' : '#ffffff' }}>
-          🔒 GE0 闭环对账防守全生命周期链路
+          🔒 GE0 全生命周期链路
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-[11px] leading-relaxed font-mono">
           <div className="p-2.5 bg-slate-950/20 border border-white/5 rounded-lg">

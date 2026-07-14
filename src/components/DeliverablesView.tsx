@@ -8,9 +8,11 @@ import { MonthlyReportView } from './MonthlyReportView';
 import { QuarterlyReportView } from './QuarterlyReportView';
 
 export function DeliverablesView({
-  company
+  company,
+  isLightMode = false
 }: {
   company: Company;
+  isLightMode?: boolean;
 }) {
   // Navigation sub-page state: 'center' | 'generator' | 'weekly' | 'monthly' | 'quarterly'
   const [subPage, setSubPage] = useState<'center' | 'generator' | 'weekly' | 'monthly' | 'quarterly'>('center');
@@ -30,11 +32,11 @@ export function DeliverablesView({
       )}
       
       {subPage === 'monthly' && (
-        <MonthlyReportView onBack={() => setSubPage('center')} />
+        <MonthlyReportView company={company} onBack={() => setSubPage('center')} isLightMode={isLightMode} />
       )}
       
       {subPage === 'quarterly' && (
-        <QuarterlyReportView onBack={() => setSubPage('center')} />
+        <QuarterlyReportView onBack={() => setSubPage('center')} isLightMode={isLightMode} />
       )}
     </div>
   );

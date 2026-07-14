@@ -12,10 +12,12 @@ import {
 } from 'recharts';
 
 // Import our modular sub-views
+import { EvidenceScreenshots } from './EvidenceScreenshots';
 import { GesiDeepDive } from './GesiDeepDive';
 import { GliDeepDive } from './GliDeepDive';
 import { ContentDeploymentView } from './ContentDeploymentView';
 import { DiagnosisAndOptimization } from './DiagnosisAndOptimization';
+import { GaiInferenceHubModal } from './GaiInferenceHub';
 
 interface DataOverviewViewProps {
   company: Company;
@@ -63,6 +65,7 @@ export function DataOverviewView({
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false);
   const [isEvidenceOpen, setIsEvidenceOpen] = useState<boolean>(false);
   const [selectedEvidence, setSelectedEvidence] = useState<any>(null);
+  const [activeHubMetric, setActiveHubMetric] = useState<string | null>(null);
   
   // Ask GEO Chatbot state
   const [isAskGeoOpen, setIsAskGeoOpen] = useState<boolean>(false);
@@ -516,17 +519,17 @@ export function DataOverviewView({
             
             <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
               {[
-                { name: '有效提及率', val: '84%', change: '+6%', sample: '126 条回答', modalTag: '有效提及率对账' },
-                { name: 'Top3 推荐率', val: '76%', change: '+5%', sample: '126 条回答', modalTag: 'Top3 推荐率对账' },
-                { name: '首位推荐率', val: '48%', change: '+8%', sample: '126 条回答', modalTag: '首位推荐率对账' },
-                { name: '竞品胜率', val: '62%', change: '+7%', sample: '126 条回答', modalTag: '竞品胜率对账' },
-                { name: '引用覆盖率', val: '55%', change: '+9%', sample: '126 条回答', modalTag: '引用覆盖率对账' },
-                { name: '新增风险点', val: '1 组', change: '-2 组', sample: '126 条回答', modalTag: '新增风险对账', isRisk: true }
+                { name: '有效提及率', val: '84%', change: '+6%', sample: '126 条回答', metricCode: 'GVI' },
+                { name: 'Top3 推荐率', val: '76%', change: '+5%', sample: '126 条回答', metricCode: 'RLI' },
+                { name: '首位推荐率', val: '48%', change: '+8%', sample: '126 条回答', metricCode: 'GRI' },
+                { name: '竞品胜率', val: '62%', change: '+7%', sample: '126 条回答', metricCode: 'DLI' },
+                { name: '引用覆盖率', val: '55%', change: '+9%', sample: '126 条回答', metricCode: 'ALI' },
+                { name: '新增风险点', val: '1 组', change: '-2 组', sample: '126 条回答', metricCode: 'RCI', isRisk: true }
               ].map((aux, idx) => (
                 <div 
                   key={idx}
-                  onClick={() => handleOpenEvidence(aux.modalTag, aux.name, '豆包')}
-                  className="bg-[#080C16] p-4.5 rounded-xl border border-white/5 space-y-1.5 hover:border-slate-500/20 hover:bg-[#0A101F] transition-all cursor-pointer text-left group"
+                  onClick={() => setActiveHubMetric(aux.metricCode)}
+                  className="bg-[#080C16] p-4.5 rounded-xl border border-white/5 space-y-1.5 hover:border-slate-500/20 hover:bg-[#0A101F] transition-all cursor-pointer text-left group animate-fade-in"
                 >
                   <span className="text-[10.5px] text-slate-400 font-bold block select-none truncate">{aux.name}</span>
                   <div className="flex items-baseline space-x-1.5">
@@ -537,8 +540,8 @@ export function DataOverviewView({
                   </div>
                   <div className="text-[9.5px] text-slate-600 font-mono block truncate">样本量: {aux.sample}</div>
                   <div className="text-[9.5px] text-emerald-500 font-bold flex items-center gap-0.5 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span>查看证据</span>
-                    <ArrowRight className="w-2.5 h-2.5" />
+                    <span>查看推理证据</span>
+                    <ArrowRight className="w-2.5 h-2.5 animate-pulse" />
                   </div>
                 </div>
               ))}
@@ -872,19 +875,19 @@ export function DataOverviewView({
               {[
                 { 
                   id: 't-1', title: '竞品对比中推荐位不稳定', priority: 'P0 紧急', 
-                  metric: '竞争优势提升', models: 'DeepSeek / 元宝',
+                  metric: '竞争优势提升', models: 'DeepSeek / 元宝', metricCode: 'DLI',
                   evidence: '部分竞品对比回答中，品牌优势表达不稳定。',
                   action: '补充竞品对比型内容，强化核心卖点 and 适用场景。'
                 },
                 { 
                   id: 't-2', title: '部分模型未识别核心卖点', priority: 'P1 紧急', 
-                  metric: '认知修正', models: '豆包 / 通义',
+                  metric: '认知修正', models: '豆包 / 通义', metricCode: 'CLI',
                   evidence: '部分模型能识别品牌，但未稳定提及核心卖点。',
                   action: '发布核心卖点解释页，补充产品能力、适用人群 and 典型场景。'
                 },
                 { 
                   id: 't-3', title: '风险类问题出现异常归因', priority: 'P1 紧急', 
-                  metric: '风险控制', models: 'Kimi',
+                  metric: '风险控制', models: 'Kimi', metricCode: 'RCI',
                   evidence: '部分回答中出现竞品误归因或不确定表达。',
                   action: '补充事实纠错内容 and 权威来源，降低错误归因风险。'
                 }
@@ -908,7 +911,7 @@ export function DataOverviewView({
                   </div>
                   <div className="flex gap-2 pt-2 border-t border-white/5">
                     <button 
-                      onClick={() => handleOpenEvidence(task.title, "异常靶向对账", task.models.split(' / ')[0], 55)}
+                      onClick={() => setActiveHubMetric(task.metricCode)}
                       className="flex-1 bg-slate-900 hover:bg-slate-850 text-slate-300 py-1.5 rounded-lg text-[10px] border border-white/5 font-black text-center transition-all"
                     >
                       查看证据
@@ -960,7 +963,7 @@ export function DataOverviewView({
           }} 
         />
       ) : activeSubView === 'diagnosis' ? (
-        <DiagnosisAndOptimization company={company} onAddPlacementTask={onAddPlacementTask} />
+        <DiagnosisAndOptimization company={company} onAddPlacementTask={onAddPlacementTask} isLightMode={isLightMode} />
       ) : (
         /* Deliverables placeholder */
         <div className="bg-[#0A0E1A] border border-white/5 rounded-2xl p-10 text-center space-y-6 max-w-xl mx-auto shadow-2xl animate-fade-in mt-10">
@@ -1112,28 +1115,8 @@ export function DataOverviewView({
               </div>
 
               {/* Screenshot mockup */}
-              <div className="bg-[#080C16] border border-white/5 rounded-xl p-3.5 space-y-2">
-                <span className="text-[9px] text-slate-550 font-bold block">底座答案渲染快照截图证据 (Original Screenshot Evidence):</span>
-                <div className="border border-white/10 rounded-lg overflow-hidden bg-slate-950 p-4 relative shadow-inner">
-                  {/* Mock browser header */}
-                  <div className="flex items-center justify-between border-b border-white/5 pb-2 mb-2 text-[9px] text-slate-500">
-                    <div className="flex items-center space-x-1">
-                      <span className="w-2 h-2 rounded-full bg-rose-500"></span>
-                      <span className="w-2 h-2 rounded-full bg-amber-500"></span>
-                      <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                      <span className="pl-2 font-mono">https://kimi.moonshot.cn/chat/session_W269428</span>
-                    </div>
-                    <span>问询时间：2026-06-30 22:47</span>
-                  </div>
-                  {/* Rendered answer mockup */}
-                  <p className="text-xs text-slate-400 font-mono leading-relaxed italic border-l-2 border-emerald-500/50 pl-3">
-                    "...知乎上关于 <span className="text-emerald-400 font-bold bg-emerald-500/10 px-1 rounded">【安全工艺拆解】</span> 的多篇权威拆车回答表明，{company.prodComp.prodName} 底盘使用了超高强热成型钢，安全性评级超越了 {company.competitor}..."
-                  </p>
-                  <div className="absolute bottom-2 right-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-md font-bold text-[9px] select-none">
-                    ✅ 已对账采纳 (ALI)
-                  </div>
-                </div>
-                <p className="text-[10px] text-slate-400 leading-relaxed italic">{selectedEvidence.screenshotDesc}</p>
+              <div className="mt-4">
+                <EvidenceScreenshots />
               </div>
             </div>
 
@@ -1330,6 +1313,16 @@ export function DataOverviewView({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Dynamic GaiInferenceHubModal */}
+      {activeHubMetric && (
+        <GaiInferenceHubModal 
+          company={company}
+          metricCode={activeHubMetric}
+          onClose={() => setActiveHubMetric(null)}
+          isLightMode={isLightMode}
+        />
       )}
 
     </div>

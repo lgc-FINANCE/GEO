@@ -180,6 +180,7 @@ export interface Company {
     priority: 'P0' | 'P1' | 'P2';
     status: '待生成' | '生成中' | '待审核' | '已发布' | '生效中';
     owner: string;
+    optPrompt?: string;
     generatedContent?: {
       title: string;
       outline: string[];
